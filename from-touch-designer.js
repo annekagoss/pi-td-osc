@@ -38,11 +38,15 @@ const udp = dgram.createSocket('udp4', (msg, rinfo) => {
     const message = osc.fromBuffer(msg);
     const channels = getChannels(message, [
     	'/0',
-	'/1'
+	'/1',
+	'/2',
+	'/3'
     ]);
     //logChannels(channels);
     sendChannelToPinout(4, channels[0].value[0], 0);
     sendChannelToPinout(17, channels[1].value[0], 1);
+    sendChannelToPinout(22, channels[2].value[0], 2);
+    sendChannelToPinout(24, channels[3].value[0], 3);
   } catch (err) {
    // console.log('Could not decode OSC message');
   }
