@@ -18,6 +18,12 @@ const getChannels = (message, channelNames) => {
 }
 
 rpio.init({mapping: 'gpio'});
+rpio.open(4, rpio.OUTPUT, rpio.LOW);
+rpio.open(17, rpio.OUTPUT, rpio.LOW);
+rpio.open(27, rpio.OUTPUT, rpio.LOW);
+rpio.open(22, rpio.OUTPUT, rpio.LOW);
+rpio.open(10, rpio.OUTPUT, rpio.LOW);
+
 const lastPinValues = new Array(10).fill(0);
 
 const sendChannelToPinout = (pinNumber, channel, pinIndex) => {
@@ -33,20 +39,22 @@ const udp = dgram.createSocket('udp4', (msg, rinfo) => {
 
   // save the remote address
   remote = rinfo.address;
-
+  
   try {
     const message = osc.fromBuffer(msg);
     const channels = getChannels(message, [
     	'/0',
 	'/1',
 	'/2',
-	'/3'
+	'/3',
+	'/4'
     ]);
     //logChannels(channels);
     sendChannelToPinout(4, channels[0].value[0], 0);
     sendChannelToPinout(17, channels[1].value[0], 1);
-    sendChannelToPinout(22, channels[2].value[0], 2);
-    sendChannelToPinout(24, channels[3].value[0], 3);
+    sendChannelToPinout(27, channels[2].value[0], 2);
+    sendChannelToPinout(22, channels[3].value[0], 3);
+    sendChannelToPinout(10, channels[4].value[0], 4);
   } catch (err) {
    // console.log('Could not decode OSC message');
   }
@@ -108,6 +116,7 @@ const send = () => {
   console.log('Sent OSC message to %s:%d', remote, 9999);
 
 }
+
 
 // send message every second
 setInterval(send, 1000);
